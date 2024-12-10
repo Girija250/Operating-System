@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <sys/stat.h>
+void printPermissions(mode_t mode) {
+    char *types[] = {"Owner", "Group", "Others"};
+    for (int i = 0; i < 3; i++) {
+        printf("%s: %c%c%c\n", types[i],
+               (mode & (1 << (8 - i * 3))) ? 'r' : '-',
+               (mode & (1 << (7 - i * 3))) ? 'w' : '-',
+               (mode & (1 << (6 - i * 3))) ? 'x' : '-');
+    }
+}
+int main() {
+    char fileName[100];
+    struct stat fileStat;
+
+    printf("Enter file name: ");
+    scanf("%s", fileName);
+
+    if (stat(fileName, &fileStat) == 0) {
+        printf("File Permissions for %s:\n", fileName);
+        printPermissions(fileStat.st_mode);
+    } else {
+        perror("Error");
+    }
+    return 0;
+}
