@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+#define MAX 10
+
+int main() {
+    char file[MAX][20]; // File storing records
+    int n, record;
+
+    printf("Enter the number of records: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter record %d: ", i + 1);
+        scanf("%s", file[i]);
+    }
+    printf("Enter the record to access (1-%d): ", n);
+    scanf("%d", &record);
+
+    printf("Accessing records sequentially:\n");
+    for (int i = 0; i < record; i++)
+        printf("Record %d: %s\n", i + 1, file[i]);
+
+    return 0;
+}
