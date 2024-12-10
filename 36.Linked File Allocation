@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Block {
+    char data[20];
+    struct Block *next;
+} Block;
+int main() {
+    int n;
+    printf("Enter the number of blocks: ");
+    scanf("%d", &n);
+
+    Block *head = NULL, *tail = NULL, *temp;
+
+    for (int i = 0; i < n; i++) {
+        temp = (Block *)malloc(sizeof(Block));
+        printf("Enter data for block %d: ", i + 1);
+        scanf("%s", temp->data);
+        temp->next = NULL;
+
+        if (head == NULL)
+            head = tail = temp;
+        else {
+            tail->next = temp;
+            tail = temp;
+        }
+    }
+    printf("\nAccessing file blocks:\n");
+    temp = head;
+    while (temp) {
+        printf("Block Data: %s\n", temp->data);
+        temp = temp->next;
+    }
+
+    return 0;
+}
