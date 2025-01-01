@@ -1,25 +1,24 @@
 #include <stdio.h>
-#define MAX 3
+
+#define FRAME_COUNT 3
+
+void lru(int pages[], int n) {
+    int frames[FRAME_COUNT] = {-1}, time[FRAME_COUNT] = {0}, page_faults = 0;
+    for (int i = 0; i < n; i++) {
+        int flag = 0, lru = 0;
+        for (int j = 0; j < FRAME_COUNT; j++) {
+            if (frames[j] == pages[i]) { flag = 1; time[j] = i; break; }
+            if (time[j] < time[lru]) lru = j;
+        }
+        if (!flag) { frames[lru] = pages[i]; time[lru] = i; page_faults++; }
+        printf("Frames: "); for (int j = 0; j < FRAME_COUNT; j++) printf("%d ", frames[j]);
+        printf("\n");
+    }
+    printf("Total page faults: %d\n", page_faults);
+}
 
 int main() {
-    int pages[] = {1, 2, 3, 4, 1, 2, 5, 1, 2, 3}, frames[MAX] = {-1, -1, -1}, timestamps[MAX] = {0}, faults = 0, time = 0;
-
-    for (int i = 0; i < 10; i++) {
-        int hit = 0, lru = 0;
-        for (int j = 0; j < MAX; j++) {
-            if (frames[j] == pages[i]) {
-                hit = 1;
-                timestamps[j] = ++time; // Update timestamp for hit
-            }
-            if (timestamps[j] < timestamps[lru]) lru = j; // Find least recently used
-        }
-        if (!hit) {
-            frames[lru] = pages[i];
-            timestamps[lru] = ++time;
-            faults++;
-        }
-        printf("Page %d -> Frames: %d %d %d\n", pages[i], frames[0], frames[1], frames[2]);
-    }
-    printf("Total Page Faults: %d\n", faults);
+    int pages[] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3};
+    lru(pages, sizeof(pages) / sizeof(pages[0]));
     return 0;
 }
