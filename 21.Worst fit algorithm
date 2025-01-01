@@ -1,34 +1,18 @@
 #include <stdio.h>
-#define MAX 10
-void worstFit(int blockSize[], int blocks, int processSize[], int processes) {
-    int allocation[MAX] = {-1}; // Allocation array
 
-    for (int i = 0; i < processes; i++) {
-        int worstIdx = -1;
-        for (int j = 0; j < blocks; j++) {
-            if (blockSize[j] >= processSize[i]) {
-                if (worstIdx == -1 || blockSize[j] > blockSize[worstIdx])
-                    worstIdx = j;
-            }
-        }
-        if (worstIdx != -1) {
-            allocation[i] = worstIdx;
-            blockSize[worstIdx] -= processSize[i];
-        }
-    }
-    printf("Process\tSize\tBlock\n");
-    for (int i = 0; i < processes; i++) {
-        if (allocation[i] != -1)
-            printf("P%d\t%d\tB%d\n", i + 1, processSize[i], allocation[i] + 1);
-        else
-            printf("P%d\t%d\tNot Allocated\n", i + 1, processSize[i]);
+void worstFit(int b[], int m, int p[], int n) {
+    for (int i = 0; i < n; i++) {
+        int worst = -1;
+        for (int j = 0; j < m; j++)
+            if (b[j] >= p[i] && (worst == -1 || b[j] > b[worst]))
+                worst = j;
+        if (worst != -1) b[worst] -= p[i];
+        printf("Process %d (%d): %s\n", i + 1, p[i], worst == -1 ? "Not Allocated" : "Block");
     }
 }
+
 int main() {
-    int blockSize[] = {100, 500, 200, 300, 600};
-    int processSize[] = {212, 417, 112, 426};
-    int blocks = sizeof(blockSize) / sizeof(blockSize[0]);
-    int processes = sizeof(processSize) / sizeof(processSize[0]);
-    worstFit(blockSize, blocks, processSize, processes);
+    int b[] = {100, 500, 200, 300, 600}, p[] = {212, 417, 112, 426};
+    worstFit(b, 5, p, 4);
     return 0;
 }
