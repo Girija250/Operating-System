@@ -1,21 +1,16 @@
 #include <stdio.h>
-#define MAX 10
+
+void indexedAllocation(int indexBlock[], int dataBlocks[], int n) {
+    printf("File content accessed through index block:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Index Block[%d] -> Data Block: %d, Content: %d\n", i, indexBlock[i], dataBlocks[indexBlock[i]]);
+    }
+}
 
 int main() {
-    int indexBlock[MAX], n;
-    char fileData[MAX][20];
-    printf("Enter the number of file blocks: ");
-    scanf("%d", &n);
-
-    printf("Allocating file blocks...\n");
-    for (int i = 0; i < n; i++) {
-        indexBlock[i] = i;
-        printf("Enter data for block %d: ", i);
-        scanf("%s", fileData[i]);
-    }
-    printf("\nAccessing file blocks using index block:\n");
-    for (int i = 0; i < n; i++)
-        printf("Block %d -> Data: %s\n", indexBlock[i], fileData[indexBlock[i]]);
-
+    int dataBlocks[] = {100, 200, 300, 400, 500}; // Example data blocks
+    int indexBlock[] = {0, 2, 4, 1, 3}; // Index block pointing to data blocks
+    int n = sizeof(indexBlock) / sizeof(indexBlock[0]);
+    indexedAllocation(indexBlock, dataBlocks, n);
     return 0;
 }
