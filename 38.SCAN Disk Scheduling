@@ -1,21 +1,61 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-int compare(const void *a, const void *b) { return (*(int *)a - *(int *)b); }
-
-int main() {
-    int n, head, dir, disk, i, pos = 0, total = 0;
-    printf("Disk size, requests, head, direction: ");
-    scanf("%d %d %d %d", &disk, &n, &head, &dir);
-    int req[n + 2];
-    for (i = 0; i < n; i++) scanf("%d", &req[i]);
-    req[n++] = head, req[n++] = dir == 1 ? disk - 1 : 0;
-    qsort(req, n, sizeof(int), compare);
-
-    while (req[pos] < head) pos++;
-    printf("Order: ");
-    for (i = dir == 1 ? pos : pos - 1; i < n && i >= 0; i += dir) printf("%d ", req[i]);
-    for (i = dir == 1 ? pos - 1 : pos; i >= 0 && i < n; i -= dir) printf("%d ", req[i]);
-    for (i = 1; i < n; i++) total += abs(req[i] - req[i - 1]);
-    printf("\nSeek Time: %d\n", total);
+#include<stdio.h>
+#include<stdlib.h>
+int cmp(const void *a,const void *b)
+{
+	return((int *)a-(int *)b);
+}
+void scan(int request[],int n,int head,int disk_size,int direction)
+{
+	int tom=0,i;
+	request[n]=head;
+	n++;
+	qsort(request,n,sizeof(int),cmp);
+	int head_pos=-1;
+	for(i=0;i<n;i++)
+	{
+		if(request[i]==head)
+		{
+			head_pos=i;
+			break;			
+		}
+	}
+	if(direction==0)
+	{
+		for(i=head_pos;i>=0;i--)
+		{
+			tom+=abs(request[i]-head);
+			head=request[i];
+		}
+		tom+=abs(head);
+		head=0;
+		for(i=head_pos+1;i<n;i++)
+		{
+			tom+=abs(request[i]-head);
+			head=request[i];
+		}
+	}
+	else
+	{
+		for(i=head_pos;i<n;i++)
+		{
+			tom+=abs(request[i]-head);
+			head=request[i];
+		}
+		tom+=abs(disk_size-1-head);
+		head=disk_size-1;
+		for(i=head_pos-1;i>=0;i--)
+		{
+			tom+=abs(request[i]-head);
+			head=request[i];
+		}
+	}
+	printf("\nTotal Overhead Movement is : %d",tom);
+}
+int main()
+{
+	int n=8,head=100,disk_size=201,direction=200;
+	int request[]={30,85,90,100,105,110,135,145};
+	printf("Initial head position is : %d",head);
+	scan(request,n,head,disk_size,direction);
+	return 0;
 }
